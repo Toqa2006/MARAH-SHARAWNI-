@@ -1,0 +1,992 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Windows Phone | Quiz Quest</title>
+
+<style>
+:root {
+  --bg: #f4f7f2;
+  --white: #ffffff;
+  --green: #477a67;
+  --mint: #dcece3;
+  --blue: #e0ebf4;
+  --pink: #f4e3e4;
+  --yellow: #f5efd6;
+  --text: #293d35;
+  --muted: #7b8a81;
+  --border: #e4ebe4;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", Arial, sans-serif;
+  background:
+    radial-gradient(circle at 10% 10%, #e2eee4, transparent 30%),
+    radial-gradient(circle at 90% 25%, #e4edf5, transparent 30%),
+    var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  transition: .25s ease;
+}
+
+button:hover {
+  transform: translateY(-3px);
+}
+
+button:focus-visible {
+  outline: 3px solid #8ab8a0;
+  outline-offset: 3px;
+}
+
+.container {
+  width: min(1000px, 92%);
+  margin: auto;
+  padding: 28px 0 40px;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 45px;
+  gap: 12px;
+}
+
+.brand {
+  font-size: 19px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.brand span {
+  color: var(--green);
+}
+
+.logo {
+  display: grid;
+  grid-template-columns: repeat(2, 11px);
+  gap: 3px;
+}
+
+.logo i {
+  width: 11px;
+  height: 11px;
+  background: #477a67;
+  border-radius: 2px;
+}
+
+.logo i:nth-child(2) { background: #9bbda9; }
+.logo i:nth-child(3) { background: #bfd7c7; }
+
+.badge {
+  background: #ffffffa8;
+  border: 1px solid var(--border);
+  padding: 9px 14px;
+  border-radius: 30px;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.1fr .9fr;
+  align-items: center;
+  gap: 35px;
+  animation: appear .7s ease;
+}
+
+.tag {
+  display: inline-block;
+  background: var(--mint);
+  color: var(--green);
+  padding: 9px 13px;
+  border-radius: 30px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .5px;
+}
+
+h1 {
+  font-size: clamp(36px, 5vw, 59px);
+  line-height: 1.05;
+  letter-spacing: -2px;
+  margin: 20px 0;
+}
+
+h1 span {
+  color: var(--green);
+}
+
+.subtitle {
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 460px;
+  font-size: 15px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 25px;
+}
+
+.primary, .secondary {
+  padding: 14px 21px;
+  border-radius: 14px;
+  font-weight: 800;
+}
+
+.primary {
+  background: var(--green);
+  color: white;
+  border: none;
+  box-shadow: 0 8px 20px #477a6728;
+}
+
+.primary:hover {
+  background: #376653;
+}
+
+.secondary {
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.tiles {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 11px;
+  transform: rotate(2deg);
+  animation: float 5s ease-in-out infinite;
+}
+
+.tile {
+  padding: 19px;
+  border-radius: 19px;
+  min-height: 125px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-shadow: 0 12px 30px #345c4510;
+  transition: .3s;
+}
+
+.tile:hover {
+  transform: scale(1.04) rotate(-2deg);
+}
+
+.tile .emoji {
+  font-size: 27px;
+}
+
+.tile small {
+  color: #62766b;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.tile strong {
+  font-size: 17px;
+}
+
+.mint { background: var(--mint); }
+.blue { background: var(--blue); }
+.pink { background: var(--pink); }
+.yellow { background: var(--yellow); }
+
+.tile.wide {
+  grid-column: span 2;
+  background: white;
+  min-height: 85px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.game {
+  display: none;
+  margin-top: 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 27px;
+  padding: clamp(20px, 4vw, 38px);
+  box-shadow: 0 20px 60px #355b4410;
+  animation: appear .4s ease;
+}
+
+.game.active {
+  display: block;
+}
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.category {
+  color: var(--green);
+  font-weight: 800;
+  font-size: 12px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.score {
+  background: #f1f6f1;
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.progress-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.progress {
+  flex: 1;
+  height: 7px;
+  background: #edf1ec;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  width: 0;
+  height: 100%;
+  background: linear-gradient(90deg, #477a67, #a8cdb6);
+  border-radius: 20px;
+  transition: width .4s ease;
+}
+
+.question {
+  font-size: clamp(22px, 3vw, 29px);
+  line-height: 1.4;
+  margin: 28px 0 22px;
+  animation: appear .35s ease;
+}
+
+.answers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.answer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  background: white;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 16px;
+  padding: 15px;
+  min-height: 72px;
+}
+
+.answer:hover:not(:disabled) {
+  background: #f7fbf7;
+  border-color: #91b6a0;
+}
+
+.letter {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: #eef3ed;
+  color: var(--green);
+  font-weight: 900;
+}
+
+.answer.correct {
+  border-color: #78ad8b;
+  background: #eaf5ed;
+}
+
+.answer.correct .letter {
+  background: #477a67;
+  color: white;
+}
+
+.answer.wrong {
+  border-color: #d99595;
+  background: #fff0f0;
+}
+
+.answer.wrong .letter {
+  background: #c86d6d;
+  color: white;
+}
+
+.answer:disabled {
+  cursor: default;
+}
+
+.feedback {
+  display: none;
+  margin-top: 17px;
+  padding: 16px;
+  border-radius: 15px;
+  font-size: 14px;
+  line-height: 1.7;
+  animation: appear .3s ease;
+}
+
+.feedback.show { display: block; }
+.feedback.good { background: #edf7ef; color: #315d43; }
+.feedback.bad { background: #fff0f0; color: #854646; }
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 23px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+button:disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.result {
+  display: none;
+  text-align: center;
+  padding: 20px 0;
+  animation: appear .5s ease;
+}
+
+.result.show { display: block; }
+
+.result-icon {
+  font-size: 52px;
+  background: var(--yellow);
+  width: 100px;
+  height: 100px;
+  border-radius: 30px;
+  display: grid;
+  place-items: center;
+  margin: 15px auto 20px;
+}
+
+.result h2 {
+  font-size: 34px;
+  margin: 15px 0;
+}
+
+.result p {
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 450px;
+  margin: 15px auto 22px;
+}
+
+.final-score {
+  font-size: 45px;
+  color: var(--green);
+  font-weight: 900;
+  margin: 18px 0;
+}
+
+/* Student names at the end */
+.student-credits {
+  margin: 38px auto 0;
+  padding: 24px 18px;
+  max-width: 380px;
+  background: linear-gradient(135deg, #edf5ee, #f1f5fa);
+  border: 1px solid #dfe9e1;
+  border-radius: 22px;
+  box-shadow: 0 12px 30px #355b440d;
+  animation: appear .7s ease;
+}
+
+.student-credits .star {
+  display: block;
+  color: var(--green);
+  font-size: 25px;
+  margin-bottom: 10px;
+}
+
+.student-credits p {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.student-credits h3 {
+  color: var(--green);
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  margin: 11px 0;
+}
+
+.student-credits .line {
+  width: 45px;
+  height: 2px;
+  border-radius: 5px;
+  background: #b8d4c2;
+  margin: 12px auto;
+}
+
+footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 25px;
+  color: #89968f;
+  font-size: 12px;
+}
+
+.confetti {
+  position: fixed;
+  top: -20px;
+  width: 9px;
+  height: 14px;
+  border-radius: 3px;
+  z-index: 10;
+  pointer-events: none;
+  animation: fall 2.5s linear forwards;
+}
+
+@keyframes appear {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(2deg); }
+  50% { transform: translateY(-10px) rotate(0deg); }
+}
+
+@keyframes fall {
+  to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+}
+
+@media (max-width: 700px) {
+  nav { margin-bottom: 30px; }
+  .hero { grid-template-columns: 1fr; text-align: center; }
+  .subtitle { margin: auto; }
+  .actions { justify-content: center; }
+  .tiles { max-width: 360px; width: 100%; margin: auto; }
+  .answers { grid-template-columns: 1fr; }
+  .bottom { flex-direction: column-reverse; align-items: stretch; }
+  .bottom button { width: 100%; }
+  h1 { letter-spacing: -1px; }
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+
+  <nav>
+    <div class="brand">
+      <div class="logo"><i></i><i></i><i></i><i></i></div>
+      Pocket Quiz <span>/ OS Edition</span>
+    </div>
+    <div class="badge">LEARN · PLAY · REPEAT</div>
+  </nav>
+
+  <section class="hero" id="hero">
+    <div>
+      <div class="tag">✦ A LITTLE TECH CHALLENGE</div>
+      <h1>Ready to meet<br><span>Windows Phone?</span></h1>
+      <p class="subtitle">
+        Explore Live Tiles, Microsoft apps, security and the story of a phone OS
+        that dared to look different. Learn a little, play a little!
+      </p>
+
+      <div class="actions">
+        <button class="primary" id="startBtn">Start the quiz →</button>
+        <button class="secondary" id="howBtn">How to play</button>
+      </div>
+    </div>
+
+    <div class="tiles">
+      <div class="tile mint">
+        <span class="emoji">☁️</span>
+        <small>YOUR WORLD</small>
+        <strong>OneDrive</strong>
+      </div>
+      <div class="tile blue">
+        <span class="emoji">✉️</span>
+        <small>STAY IN TOUCH</small>
+        <strong>Mail</strong>
+      </div>
+      <div class="tile pink">
+        <span class="emoji">▧</span>
+        <small>YOUR MOMENTS</small>
+        <strong>Photos</strong>
+      </div>
+      <div class="tile yellow">
+        <span class="emoji">♫</span>
+        <small>PRESS PLAY</small>
+        <strong>Music</strong>
+      </div>
+      <div class="tile wide">
+        <div>
+          <strong>Little tiles. Big memories.</strong><br>
+          <small>A quiz inspired by Windows Phone OS</small>
+        </div>
+        <span class="emoji">✦</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="game" id="game">
+
+    <div id="quizView">
+      <div class="game-header">
+        <div class="category" id="category">THE BASICS</div>
+        <div class="score">✦ Score: <span id="score">0</span></div>
+      </div>
+
+      <div class="progress-info">
+        <span id="counter">Question 1 of 15</span>
+        <div class="progress">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <span id="percent">0%</span>
+      </div>
+
+      <h2 class="question" id="question"></h2>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+
+      <div class="bottom">
+        <span class="hint" id="hint">Choose the best answer.</span>
+        <button class="primary" id="nextBtn" disabled>Next question →</button>
+      </div>
+    </div>
+
+    <div class="result" id="result">
+      <div class="result-icon" id="resultIcon">🏆</div>
+      <div class="category">QUIZ COMPLETE</div>
+      <h2 id="resultTitle">Brilliant work!</h2>
+
+      <div class="final-score">
+        <span id="finalScore">0</span>
+        <span style="font-size:20px;color:var(--muted)"> / 15</span>
+      </div>
+
+      <p id="resultText"></p>
+
+      <div class="actions" style="justify-content:center">
+        <button class="primary" id="restartBtn">Play again ↻</button>
+        <button class="secondary" id="homeBtn">Back to start</button>
+      </div>
+
+      <!-- Student names appear at the end of the game -->
+      <div class="student-credits">
+        <span class="star">✦</span>
+        <p>Prepared by</p>
+        <h3>HALA RJOUB</h3>
+        <div class="line"></div>
+        <h3>MARAH SHARAWNI</h3>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
+    <span>Made for curious minds ✿</span>
+    <span>Windows Phone OS · Interactive Quiz</span>
+  </footer>
+</div>
+
+<script>
+const questions = [
+  {
+    category: "THE BASICS",
+    question: "Who developed Windows Phone OS?",
+    answers: ["Apple", "Microsoft", "Google", "Nokia"],
+    correct: 1,
+    explanation: "Microsoft developed Windows Phone. Nokia was best known for making Lumia phones that ran it."
+  },
+  {
+    category: "THE BASICS",
+    question: "What made the Windows Phone Start screen distinctive?",
+    answers: ["Live Tiles", "A desktop taskbar", "Only text menus", "A rotating 3D cube"],
+    correct: 0,
+    explanation: "Live Tiles could display changing information directly on the Start screen instead of being only static icons."
+  },
+  {
+    category: "HISTORY",
+    question: "Which older Microsoft mobile platform did Windows Phone replace?",
+    answers: ["Android", "BlackBerry OS", "Windows Mobile", "Symbian"],
+    correct: 2,
+    explanation: "Windows Phone was Microsoft's touch-first redesign after the older Windows Mobile platform."
+  },
+  {
+    category: "HISTORY",
+    question: "When was Windows Phone 7 first released?",
+    answers: ["2005", "2010", "2015", "2019"],
+    correct: 1,
+    explanation: "Windows Phone 7 launched in 2010 and introduced the Live Tiles experience."
+  },
+  {
+    category: "HISTORY",
+    question: "Which features arrived with Windows Phone 8.1?",
+    answers: ["Face ID and Siri", "Dynamic Island", "Cortana and Action Center", "Google Assistant"],
+    correct: 2,
+    explanation: "Windows Phone 8.1 added Cortana, Action Center and the option for a Start screen background."
+  },
+  {
+    category: "HISTORY",
+    question: "When did Windows 10 Mobile support end?",
+    answers: ["10 December 2019", "1 January 2015", "21 December 2018", "10 December 2022"],
+    correct: 0,
+    explanation: "Microsoft ended Windows 10 Mobile support on 10 December 2019, meaning no new security updates."
+  },
+  {
+    category: "LIVE TILES",
+    question: "What were Live Tiles designed to do?",
+    answers: ["Only open settings", "Show updated information at a glance", "Charge the battery", "Block every notification"],
+    correct: 1,
+    explanation: "Live Tiles could show weather, calendar events or mail updates directly on the Start screen."
+  },
+  {
+    category: "LIVE TILES",
+    question: "Which personalisation option came with Windows Phone 8.1?",
+    answers: ["Changing the CPU", "Installing iOS", "Setting a Start screen background", "Turning the phone into a laptop"],
+    correct: 2,
+    explanation: "Windows Phone 8.1 let users set a Start screen background, alongside tile arrangement and accent colour choices."
+  },
+  {
+    category: "MICROSOFT APPS",
+    question: "Which Microsoft service provides cloud storage?",
+    answers: ["OneDrive", "AirDrop", "Bluetooth", "Cortana"],
+    correct: 0,
+    explanation: "OneDrive is Microsoft's cloud storage service and can integrate with a Microsoft account."
+  },
+  {
+    category: "MICROSOFT APPS",
+    question: "What was a strength of the Microsoft ecosystem?",
+    answers: ["No account was ever needed", "Every app was always available", "Consistent design and Microsoft integration", "It ran every Android app"],
+    correct: 2,
+    explanation: "Mail, calendar, OneDrive and Office Mobile helped provide a consistent experience, though features varied by version."
+  },
+  {
+    category: "SECURITY",
+    question: "What does a phone PIN mainly help protect against?",
+    answers: ["All software bugs", "Unauthorised access if the phone is lost", "Every online scam", "Battery wear"],
+    correct: 1,
+    explanation: "A screen lock or PIN can help prevent someone who finds a lost phone from opening it."
+  },
+  {
+    category: "SECURITY",
+    question: "What happened after Windows 10 Mobile support ended?",
+    answers: ["It received more frequent updates", "It became Android", "It no longer received new security updates", "It stopped needing security"],
+    correct: 2,
+    explanation: "A discontinued platform becomes riskier over time because newly discovered vulnerabilities may not be patched."
+  },
+  {
+    category: "PRIVACY",
+    question: "What is the difference between security and privacy?",
+    answers: [
+      "They mean exactly the same thing",
+      "Security protects data; privacy concerns how personal information is used and shared",
+      "Privacy is only about passwords",
+      "Security is only about photos"
+    ],
+    correct: 1,
+    explanation: "Security focuses on protecting devices and data from unauthorised access. Privacy focuses on control over personal information."
+  },
+  {
+    category: "COMPARISON",
+    question: "Which statement about Windows Phone's app ecosystem is accurate?",
+    answers: ["It was larger than all competitors", "It included every app ever made", "It was smaller and declined over time", "It never had third-party apps"],
+    correct: 2,
+    explanation: "A smaller app catalogue, developer-support challenges and falling adoption all contributed to its decline."
+  },
+  {
+    category: "BIG PICTURE",
+    question: "What is a key lesson from Windows Phone's story?",
+    answers: ["Design alone guarantees success", "Apps, developers and ongoing updates matter too", "Security updates are optional forever", "All mobile systems are identical"],
+    correct: 1,
+    explanation: "A distinctive interface can attract users, but a platform also needs apps, developer support, adoption and security updates."
+  }
+];
+
+const $ = id => document.getElementById(id);
+
+let deck = [];
+let index = 0;
+let score = 0;
+let answered = false;
+
+function shuffle(array) {
+  const copy = [...array];
+
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+
+  return copy;
+}
+
+function startQuiz() {
+  deck = shuffle(questions);
+  index = 0;
+  score = 0;
+
+  $("hero").style.display = "none";
+  $("game").classList.add("active");
+  $("quizView").style.display = "block";
+  $("result").classList.remove("show");
+  $("score").textContent = score;
+
+  renderQuestion();
+
+  $("game").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+function renderQuestion() {
+  answered = false;
+
+  const item = deck[index];
+
+  $("category").textContent = item.category;
+  $("question").textContent = item.question;
+  $("counter").textContent =
+    `Question ${index + 1} of ${deck.length}`;
+
+  $("percent").textContent =
+    Math.round(index / deck.length * 100) + "%";
+
+  $("progressFill").style.width =
+    Math.round(index / deck.length * 100) + "%";
+
+  $("feedback").className = "feedback";
+  $("feedback").textContent = "";
+
+  $("hint").textContent = "Choose the best answer.";
+  $("nextBtn").disabled = true;
+
+  $("nextBtn").textContent =
+    index === deck.length - 1
+      ? "See my results →"
+      : "Next question →";
+
+  const box = $("answers");
+  box.innerHTML = "";
+
+  item.answers.forEach((answer, i) => {
+    const button = document.createElement("button");
+    button.className = "answer";
+
+    const letter = document.createElement("span");
+    letter.className = "letter";
+    letter.textContent = String.fromCharCode(65 + i);
+
+    const text = document.createElement("span");
+    text.textContent = answer;
+
+    button.append(letter, text);
+
+    button.addEventListener("click", () => {
+      chooseAnswer(i, button);
+    });
+
+    box.appendChild(button);
+  });
+
+  $("question").animate(
+    [
+      { opacity: 0, transform: "translateY(10px)" },
+      { opacity: 1, transform: "translateY(0)" }
+    ],
+    { duration: 300, easing: "ease-out" }
+  );
+}
+
+function chooseAnswer(choice, selectedButton) {
+  if (answered) return;
+
+  answered = true;
+
+  const item = deck[index];
+  const buttons = [...$("answers").children];
+
+  buttons.forEach(button => {
+    button.disabled = true;
+  });
+
+  buttons[item.correct].classList.add("correct");
+
+  const feedback = $("feedback");
+
+  if (choice === item.correct) {
+    score++;
+    $("score").textContent = score;
+
+    feedback.className = "feedback show good";
+    feedback.innerHTML =
+      "<strong>✓ Correct! Well done!</strong><br>" +
+      item.explanation;
+
+    $("hint").textContent = "Nice one — keep going!";
+  } else {
+    selectedButton.classList.add("wrong");
+
+    feedback.className = "feedback show bad";
+    feedback.innerHTML =
+      "<strong>Not quite!</strong><br>" +
+      item.explanation;
+
+    $("hint").textContent = "Learn it, remember it, move on!";
+  }
+
+  $("nextBtn").disabled = false;
+}
+
+function nextQuestion() {
+  if (!answered) return;
+
+  if (index < deck.length - 1) {
+    index++;
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  $("quizView").style.display = "none";
+  $("result").classList.add("show");
+
+  $("finalScore").textContent = score;
+
+  const percentage = score / deck.length;
+
+  if (percentage === 1) {
+    $("resultIcon").textContent = "🏆";
+    $("resultTitle").textContent = "Perfect Score!";
+    $("resultText").textContent =
+      "15 out of 15! You know Windows Phone history, features and security inside out.";
+    confetti();
+  } else if (percentage >= 0.7) {
+    $("resultIcon").textContent = "🌟";
+    $("resultTitle").textContent = "You're a Tech Star!";
+    $("resultText").textContent =
+      `Excellent work! You answered ${score} out of ${deck.length} questions correctly. Keep shining!`;
+    confetti();
+  } else if (percentage >= 0.4) {
+    $("resultIcon").textContent = "🌱";
+    $("resultTitle").textContent = "Great Progress!";
+    $("resultText").textContent =
+      `You got ${score} out of ${deck.length}. Review the explanations and try again to improve your score.`;
+  } else {
+    $("resultIcon").textContent = "💪";
+    $("resultTitle").textContent = "Keep Growing!";
+    $("resultText").textContent =
+      `You got ${score} out of ${deck.length}. Every question is a chance to learn. Try again!`;
+  }
+
+  $("percent").textContent = "100%";
+  $("progressFill").style.width = "100%";
+
+  $("result").scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+function confetti() {
+  const colors = [
+    "#6f9f8c",
+    "#dcece3",
+    "#dfeaf3",
+    "#f3e1e2",
+    "#f4edcf"
+  ];
+
+  for (let i = 0; i < 45; i++) {
+    const piece = document.createElement("i");
+
+    piece.className = "confetti";
+    piece.style.left = Math.random() * 100 + "vw";
+    piece.style.background = colors[i % colors.length];
+    piece.style.animationDelay = Math.random() * 0.7 + "s";
+
+    document.body.appendChild(piece);
+
+    setTimeout(() => piece.remove(), 3200);
+  }
+}
+
+function goHome() {
+  $("game").classList.remove("active");
+  $("hero").style.display = "grid";
+
+  $("hero").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
+
+$("startBtn").addEventListener("click", startQuiz);
+$("nextBtn").addEventListener("click", nextQuestion);
+$("restartBtn").addEventListener("click", startQuiz);
+$("homeBtn").addEventListener("click", goHome);
+
+$("howBtn").addEventListener("click", () => {
+  alert(
+    "HOW TO PLAY ✦\n\n" +
+    "1. Read each question.\n" +
+    "2. Choose one of the four answers.\n" +
+    "3. Read the explanation after answering.\n" +
+    "4. Collect points and finish all 15 questions.\n\n" +
+    "Questions are shuffled every time. Good luck!"
+  );
+});
+</script>
+
+</body>
+</html>
